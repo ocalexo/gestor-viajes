@@ -23,59 +23,74 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); padding: 20px; line-height: 1.5; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding: 10px; line-height: 1.5; }
+        .container { max-width: 1200px; margin: 0 auto; width: 100%; }
 
-        /* Header y Selector de Rol */
-        header { display: flex; justify-content: space-between; align-items: center; background-color: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid var(--border-color); }
-        .role-selector { display: flex; align-items: center; gap: 10px; background: var(--pastel-blue); padding: 8px 16px; border-radius: 20px; font-weight: 600; }
+        /* Header y Selector de Rol adaptativo */
+        header { display: flex; flex-direction: column; gap: 15px; background-color: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid var(--border-color); }
+        @media (min-width: 768px) {
+            header { flex-direction: row; justify-content: space-between; align-items: center; padding: 20px; }
+        }
+        .role-selector { display: flex; align-items: center; gap: 10px; background: var(--pastel-blue); padding: 8px 16px; border-radius: 20px; font-weight: 600; width: fit-content; }
 
         /* Botones y Formularios */
-        .btn { background-color: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .btn { background-color: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; width: 100%; text-align: center; }
+        @media (min-width: 576px) { .btn { width: auto; } }
         .btn:hover { background-color: var(--primary-hover); }
         .btn-secondary { background-color: var(--pastel-purple); color: #6b21a8; }
         .btn-danger { background-color: var(--pastel-red); color: #991b1b; }
         
-        /* Modales */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 1000; }
+        /* Modales adaptados para móviles */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; padding: 10px; }
         .modal.active { display: flex; }
-        .modal-content { background: white; padding: 25px; border-radius: 12px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .modal-content { background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.95em; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; }
 
-        /* Filtros y Buscador */
-        .controls { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .search-box { flex: 1; min-width: 200px; }
+        /* Controles y Filtros */
+        .controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        @media (min-width: 768px) {
+            .controls { flex-direction: row; align-items: center; }
+        }
+        .search-box { flex: 1; width: 100%; }
         
         /* Acordeón de Viajes */
         .viaje-card { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .viaje-header { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background-color: #ffffff; }
+        .viaje-header { padding: 15px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; background-color: #ffffff; }
+        @media (min-width: 640px) {
+            .viaje-header { flex-direction: row; justify-content: space-between; align-items: center; padding: 18px 24px; }
+        }
         .viaje-header:hover { background-color: #f1f5f9; }
-        .viaje-body { display: none; padding: 20px; border-top: 1px solid var(--border-color); background-color: #fafafa; }
+        .viaje-body { display: none; padding: 15px; border-top: 1px solid var(--border-color); background-color: #fafafa; }
+        @media (min-width: 640px) { .viaje-body { padding: 20px; } }
         .viaje-body.active { display: block; }
 
         /* Estados pastel */
-        .badge { padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 700; display: inline-block; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 700; display: inline-block; }
         .badge-pendiente { background: var(--pastel-yellow); color: #854d0e; }
         .badge-encurso { background: var(--pastel-green); color: #166534; }
         .badge-finalizado { background: var(--pastel-red); color: #991b1b; }
 
-        /* Tarjetas de Actividad */
-        .actividad-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .actividad-info { border-left-color: #3b82f6; }
+        /* Tarjetas de Actividad adaptables */
+        .actividad-card { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .actividad-gasto { border-left-color: #ef4444; }
+        .actividad-content-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        @media (min-width: 576px) {
+            .actividad-content-wrapper { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+        }
 
-        /* Iconos de categoría */
-        .cat-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--pastel-purple); border-radius: 50%; margin-right: 8px; }
-
-        /* Grid Dashboard Resumen */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .dash-card { background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center; }
-        .dash-value { font-size: 1.5em; font-weight: bold; color: var(--primary-hover); }
+        /* Grid Dashboard Resumen responsivo */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 15px; }
+        @media (min-width: 576px) {
+            .dashboard-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        }
+        .dash-card { background: white; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center; }
+        .dash-value { font-size: 1.3em; font-weight: bold; color: var(--primary-hover); }
 
         /* Banner Sync */
-        #sync-banner { position: fixed; bottom: 20px; right: 20px; background: #334155; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 2000; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #sync-banner { position: fixed; bottom: 10px; right: 10px; left: 10px; background: #334155; color: white; padding: 10px 15px; border-radius: 8px; display: none; z-index: 2000; font-size: 0.85em; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        @media (min-width: 576px) { #sync-banner { left: auto; bottom: 20px; right: 20px; text-align: left; } }
     </style>
 </head>
 <body>
@@ -84,11 +99,11 @@
     <header>
         <div>
             <h1>✈️ Gestor de Viajes & Eventos</h1>
-            <p style="color: var(--text-muted); font-size: 0.9em;">Conectado a Google Sheets en tiempo real</p>
+            <p style="color: var(--text-muted); font-size: 0.85em;">Conectado a Google Sheets en tiempo real</p>
         </div>
         <div class="role-selector">
-            <label for="userRole">Rol Actual:</label>
-            <select id="userRole" onchange="cambiarRol()">
+            <label for="userRole">Rol:</label>
+            <select id="userRole" onchange="cambiarRol()" style="border:none; background:transparent; font-weight:bold; cursor:pointer;">
                 <option value="admin">Administrador</option>
                 <option value="usuario">Usuario Estándar</option>
             </select>
@@ -97,15 +112,19 @@
 
     <!-- Controles y Filtros -->
     <div class="controls">
-        <button class="btn admin-only" onclick="abrirModalViaje()">+ Nuevo Viaje</button>
-        <button class="btn btn-secondary admin-only" onclick="abrirModalUsuario()">+ Alta Usuario</button>
-        <select id="filterEstado" onchange="renderizarApp()" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);">
-            <option value="todos">Todos los Estados</option>
-            <option value="Pendiente">Iniciado / Pendiente</option>
-            <option value="En curso">En Curso</option>
-            <option value="Finalizado">Finalizado</option>
-        </select>
-        <input type="text" id="searchBox" class="search-box" placeholder="🔍 Buscar actividades por texto..." oninput="renderizarApp()" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn admin-only" onclick="abrirModalViaje()">+ Nuevo Viaje</button>
+            <button class="btn btn-secondary admin-only" onclick="abrirModalUsuario()">+ Alta Usuario</button>
+        </div>
+        <div style="display: flex; gap: 10px; width: 100%;">
+            <select id="filterEstado" onchange="renderizarApp()" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background:white;">
+                <option value="todos">Todos los Estados</option>
+                <option value="Pendiente">Iniciado / Pendiente</option>
+                <option value="En curso">En Curso</option>
+                <option value="Finalizado">Finalizado</option>
+            </select>
+            <input type="text" id="searchBox" class="search-box" placeholder="🔍 Buscar actividades..." oninput="renderizarApp()" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background:white;">
+        </div>
     </div>
 
     <!-- Lista de Viajes / Eventos -->
@@ -115,7 +134,7 @@
 <!-- Modal Alta / Edición Viaje -->
 <div id="modalViaje" class="modal">
     <div class="modal-content">
-        <h2 id="modalViajeTitulo">Nuevo Viaje</h2>
+        <h2 id="modalViajeTitulo" style="margin-bottom: 15px;">Nuevo Viaje</h2>
         <form id="formViaje" onsubmit="guardarViaje(event)">
             <input type="hidden" id="viajeId">
             <div class="form-group">
@@ -130,7 +149,7 @@
                 <label>Duración (Días)</label>
                 <input type="number" id="viajeDuracion" min="1" value="1" required>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn btn-danger" onclick="cerrarModal('modalViaje')">Cancelar</button>
                 <button type="submit" class="btn">Guardar</button>
             </div>
@@ -141,7 +160,7 @@
 <!-- Modal Alta / Edición Actividad -->
 <div id="modalActividad" class="modal">
     <div class="modal-content">
-        <h2>Nueva Actividad</h2>
+        <h2 style="margin-bottom: 15px;">Nueva Actividad</h2>
         <form id="formActividad" onsubmit="guardarActividad(event)">
             <input type="hidden" id="actividadId">
             <input type="hidden" id="actividadViajeId">
@@ -187,9 +206,9 @@
                 <label>Anotaciones Adicionales</label>
                 <textarea id="actAnotaciones" rows="2"></textarea>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn btn-danger" onclick="cerrarModal('modalActividad')">Cancelar</button>
-                <button type="submit" class="btn">Guardar Actividad</button>
+                <button type="submit" class="btn">Guardar</button>
             </div>
         </form>
     </div>
@@ -198,7 +217,7 @@
 <!-- Modal Alta Usuario -->
 <div id="modalUsuario" class="modal">
     <div class="modal-content">
-        <h2>Alta de Usuario</h2>
+        <h2 style="margin-bottom: 15px;">Alta de Usuario</h2>
         <form id="formUsuario" onsubmit="guardarUsuario(event)">
             <div class="form-group">
                 <label>Nombre Completo</label>
@@ -215,9 +234,9 @@
                     <option value="admin">Administrador</option>
                 </select>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn btn-danger" onclick="cerrarModal('modalUsuario')">Cancelar</button>
-                <button type="submit" class="btn">Registrar Usuario</button>
+                <button type="submit" class="btn">Registrar</button>
             </div>
         </form>
     </div>
@@ -226,15 +245,12 @@
 <div id="sync-banner">🔄 Sincronizando con Google Sheets...</div>
 
 <script>
-    // URL Real de tu Google Apps Script
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxw3CtoC5zKzRaCJIQXwND3l0VwqZWzzGszcaiyPfW_izVRwsZUnXMsozUC9T3IDNbEdw/exec";
 
-    // Estado global de datos
     let DB = { viajes: [], usuarios: [], actividades: [] };
     let currentRole = "admin";
     let chartInstances = {};
 
-    // Cargar datos al iniciar
     window.addEventListener("DOMContentLoaded", () => {
         cargarDatosCloud();
     });
@@ -250,7 +266,7 @@
             renderizarApp();
         } catch (err) {
             console.error("Error al cargar datos:", err);
-            document.getElementById("listaViajes").innerHTML = "<p style='color:red;'>Error al cargar los datos desde Google Sheets. Revisa la consola.</p>";
+            document.getElementById("listaViajes").innerHTML = "<p style='color:red; text-align:center;'>Error al cargar los datos desde Google Sheets.</p>";
         } finally {
             mostrarSync(false);
         }
@@ -281,7 +297,6 @@
         renderizarApp();
     }
 
-    // Calculador de estado automático según fechas
     function calcularEstado(fechaInicioStr, duracionDias) {
         if (!fechaInicioStr) return "Pendiente";
         const inicio = new Date(fechaInicioStr);
@@ -294,9 +309,7 @@
         return "Finalizado";
     }
 
-    // Renderizar la app completa
     function renderizarApp() {
-        // Control de visibilidad por rol
         document.querySelectorAll(".admin-only").forEach(el => {
             el.style.display = (currentRole === "admin") ? "inline-block" : "none";
         });
@@ -307,7 +320,7 @@
         container.innerHTML = "";
 
         if (DB.viajes.length === 0) {
-            container.innerHTML = "<p>No hay viajes registrados en la base de datos.</p>";
+            container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No hay viajes registrados.</p>";
             return;
         }
 
@@ -315,7 +328,6 @@
             const estadoAuto = calcularEstado(v.fechaInicio, v.duracionDias);
             if (filterEstado !== "todos" && estadoAuto !== filterEstado) return;
 
-            // Filtrado de actividades asociadas
             let actividadesViaje = DB.actividades.filter(a => String(a.viajeId) === String(v.id));
             if (searchBox) {
                 actividadesViaje = actividadesViaje.filter(a => 
@@ -325,10 +337,8 @@
                 );
             }
 
-            // Ordenar por fecha
             actividadesViaje.sort((a,b) => new Date(a.fecha) - new Date(b.fecha));
 
-            // Totales financieros
             const gastoTotal = actividadesViaje.reduce((acc, curr) => acc + (parseFloat(curr.coste) || 0), 0);
             const numPersonas = DB.usuarios.length || 1;
             const cuotaPerCapita = (gastoTotal / numPersonas).toFixed(2);
@@ -341,70 +351,74 @@
             card.innerHTML = `
                 <div class="viaje-header" onclick="toggleAccordion('${v.id}')">
                     <div>
-                        <strong style="font-size:1.1em;">${v.titulo}</strong>
-                        <span class="badge ${badgeClass}" style="margin-left:10px;">${estadoAuto}</span>
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <strong style="font-size:1.05em;">${v.titulo}</strong>
+                            <span class="badge ${badgeClass}">${estadoAuto}</span>
+                        </div>
                         <div style="font-size:0.85em; color:var(--text-muted); margin-top:4px;">
-                            📅 Inicio: ${v.fechaInicio ? v.fechaInicio.slice(0,10) : 'N/A'} | ⏳ ${v.duracionDias} días
+                            📅 ${v.fechaInicio ? v.fechaInicio.slice(0,10) : 'N/A'} | ⏳ ${v.duracionDias}d
                         </div>
                     </div>
-                    <div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         ${currentRole === 'admin' ? `
-                            <button class="btn btn-secondary" onclick="event.stopPropagation(); abrirModalViaje('${v.id}')">✏️ Editar</button>
-                            <button class="btn btn-danger" onclick="event.stopPropagation(); anularViaje('${v.id}')">❌ Anular</button>
+                            <button class="btn btn-secondary" style="padding:6px 12px; font-size:0.85em;" onclick="event.stopPropagation(); abrirModalViaje('${v.id}')">✏️ Editar</button>
+                            <button class="btn btn-danger" style="padding:6px 12px; font-size:0.85em;" onclick="event.stopPropagation(); anularViaje('${v.id}')">❌ Anular</button>
                         ` : ''}
                     </div>
                 </div>
                 <div id="body-${v.id}" class="viaje-body">
-                    <!-- Dashboard Resumen -->
                     <div class="dashboard-grid">
                         <div class="dash-card">
-                            <div>Gasto Total Evento</div>
+                            <div style="font-size:0.85em; color:var(--text-muted);">Gasto Total</div>
                             <div class="dash-value">${gastoTotal.toFixed(2)} €</div>
                         </div>
                         <div class="dash-card">
-                            <div>Participantes</div>
+                            <div style="font-size:0.85em; color:var(--text-muted);">Participantes</div>
                             <div class="dash-value">${numPersonas} pers.</div>
                         </div>
                         <div class="dash-card">
-                            <div>Cuota Estimada p/p</div>
+                            <div style="font-size:0.85em; color:var(--text-muted);">Cuota p/p</div>
                             <div class="dash-value">${cuotaPerCapita} €</div>
                         </div>
                     </div>
 
-                    <div style="margin-bottom: 20px; text-align:right;">
+                    <div style="margin-bottom: 15px;">
                         <button class="btn" onclick="abrirModalActividad('${v.id}')">+ Añadir Actividad</button>
                     </div>
 
-                    <h4>📋 Actividades y Gastos Registrados</h4>
-                    <div style="margin-top:10px;">
-                        ${actividadesViaje.length === 0 ? '<p style="color:var(--text-muted);">No hay actividades que coincidan con la búsqueda.</p>' : ''}
+                    <h4 style="font-size:1em; margin-bottom:10px;">📋 Actividades y Gastos</h4>
+                    <div>
+                        ${actividadesViaje.length === 0 ? '<p style="color:var(--text-muted); font-size:0.9em;">No hay actividades registradas.</p>' : ''}
                         ${actividadesViaje.map(act => `
-                            <div class="actividad-card ${act.tipo === 'Gasto' ? 'actividad-gasto' : 'actividad-info'}">
-                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div class="actividad-card ${act.tipo === 'Gasto' ? 'actividad-gasto' : ''}">
+                                <div class="actividad-content-wrapper">
                                     <div>
-                                        <strong>${obtenerIcono(act.subcategoria)} ${act.titulo}</strong>
-                                        <span class="badge" style="background:var(--pastel-blue); margin-left:8px;">${act.subcategoria || 'General'}</span>
-                                        <div style="font-size:0.85em; color:var(--text-muted); margin-top:4px;">
+                                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                            <strong>${obtenerIcono(act.subcategoria)} ${act.titulo}</strong>
+                                            <span class="badge" style="background:var(--pastel-blue);">${act.subcategoria || 'General'}</span>
+                                        </div>
+                                        <div style="font-size:0.82em; color:var(--text-muted); margin-top:4px;">
                                             🕒 ${act.fecha ? act.fecha.replace('T', ' ') : ''} 
                                             ${act.direccion ? ` | 📍 ${act.direccion}` : ''}
                                         </div>
                                     </div>
-                                    <div style="text-align:right;">
-                                        ${act.coste > 0 ? `<strong style="color:#d97706; font-size:1.1em;">${parseFloat(act.coste).toFixed(2)} €</strong>` : ''}
-                                        <div style="margin-top:5px;">
-                                            <button class="btn btn-secondary" style="padding:3px 8px; font-size:0.8em;" onclick="abrirModalActividad('${v.id}', '${act.id}')">✏️</button>
-                                            <button class="btn btn-danger" style="padding:3px 8px; font-size:0.8em;" onclick="anularActividad('${act.id}')">🗑️</button>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:8px; border-top:1px solid #f1f5f9; padding-top:6px;">
+                                        <div>
+                                            ${act.coste > 0 ? `<strong style="color:#d97706; font-size:1.05em;">${parseFloat(act.coste).toFixed(2)} €</strong>` : ''}
+                                        </div>
+                                        <div style="display:flex; gap:5px;">
+                                            <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.8em; width:auto;" onclick="abrirModalActividad('${v.id}', '${act.id}')">✏️</button>
+                                            <button class="btn btn-danger" style="padding:4px 10px; font-size:0.8em; width:auto;" onclick="anularActividad('${act.id}')">🗑️</button>
                                         </div>
                                     </div>
                                 </div>
-                                ${act.mapaUrl ? `<div style="margin-top:5px;"><a href="${act.mapaUrl}" target="_blank" style="color:var(--primary-hover); font-size:0.85em;">🗺️ Ver en Google Maps</a></div>` : ''}
-                                ${act.anotaciones ? `<div style="margin-top:5px; font-size:0.9em; color:#475569; background:#f1f5f9; padding:6px; border-radius:4px;">📝 ${act.anotaciones}</div>` : ''}
+                                ${act.mapaUrl ? `<div style="margin-top:6px;"><a href="${act.mapaUrl}" target="_blank" style="color:var(--primary-hover); font-size:0.82em;">🗺️ Ver en Google Maps</a></div>` : ''}
+                                ${act.anotaciones ? `<div style="margin-top:6px; font-size:0.85em; color:#475569; background:#f1f5f9; padding:6px; border-radius:4px;">📝 ${act.anotaciones}</div>` : ''}
                             </div>
                         `).join('')}
                     </div>
 
-                    <!-- Gráfico de Gastos por Categoría -->
-                    <div style="margin-top: 25px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    <div style="margin-top: 20px; width: 100%; max-width: 450px; margin-left: auto; margin-right: auto;">
                         <canvas id="chart-${v.id}"></canvas>
                     </div>
                 </div>
@@ -431,7 +445,6 @@
         return map[subcat] || '📌';
     }
 
-    // Modal Viaje
     function abrirModalViaje(viajeId = null) {
         document.getElementById("formViaje").reset();
         document.getElementById("viajeId").value = "";
@@ -478,7 +491,6 @@
         }
     }
 
-    // Modal Actividad
     function abrirModalActividad(viajeId, actId = null) {
         document.getElementById("formActividad").reset();
         document.getElementById("actividadViajeId").value = viajeId;
@@ -542,7 +554,6 @@
         }
     }
 
-    // Modal Usuario
     function abrirModalUsuario() {
         document.getElementById("formUsuario").reset();
         document.getElementById("modalUsuario").classList.add("active");
@@ -566,7 +577,6 @@
         document.getElementById(id).classList.remove("active");
     }
 
-    // Gráficos Chart.js
     function renderizarGrafico(viajeId, actividades) {
         setTimeout(() => {
             const ctx = document.getElementById(`chart-${viajeId}`);
