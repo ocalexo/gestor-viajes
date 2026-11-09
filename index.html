@@ -40,13 +40,17 @@
         .btn-secondary { background-color: var(--pastel-purple); color: #6b21a8; }
         .btn-danger { background-color: var(--pastel-red); color: #991b1b; }
         
-        /* Modales adaptados para móviles */
+        /* Modales */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; padding: 10px; }
         .modal.active { display: flex; }
         .modal-content { background: white; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.95em; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; }
+
+        /* Checkboxes múltiples para participantes */
+        .checkbox-group { display: flex; flex-direction: column; gap: 6px; max-height: 150px; overflow-y: auto; border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; background: #fff; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.9em; cursor: pointer; }
 
         /* Controles y Filtros */
         .controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
@@ -72,7 +76,7 @@
         .badge-encurso { background: var(--pastel-green); color: #166534; }
         .badge-finalizado { background: var(--pastel-red); color: #991b1b; }
 
-        /* Tarjetas de Actividad adaptables */
+        /* Tarjetas de Actividad */
         .actividad-card { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .actividad-gasto { border-left-color: #ef4444; }
         .actividad-content-wrapper { display: flex; flex-direction: column; gap: 10px; }
@@ -80,7 +84,7 @@
             .actividad-content-wrapper { flex-direction: row; justify-content: space-between; align-items: flex-start; }
         }
 
-        /* Grid Dashboard Resumen responsivo */
+        /* Grid Dashboard Resumen */
         .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 15px; }
         @media (min-width: 576px) {
             .dashboard-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
@@ -88,7 +92,6 @@
         .dash-card { background: white; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center; }
         .dash-value { font-size: 1.3em; font-weight: bold; color: var(--primary-hover); }
 
-        /* Banner Sync */
         #sync-banner { position: fixed; bottom: 10px; right: 10px; left: 10px; background: #334155; color: white; padding: 10px 15px; border-radius: 8px; display: none; z-index: 2000; font-size: 0.85em; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         @media (min-width: 576px) { #sync-banner { left: auto; bottom: 20px; right: 20px; text-align: left; } }
     </style>
@@ -99,16 +102,22 @@
     <header>
         <div>
             <h1>✈️ Gestor de Viajes & Eventos</h1>
-            <p style="color: var(--text-muted); font-size: 0.85em;">Conectado a Google Sheets en tiempo real</p>
+            <p style="color: var(--text-muted); font-size: 0.85em;" id="userWelcomeMsg">Conectado a Google Sheets</p>
         </div>
-        <div class="role-selector">
-            <label for="userRole">Rol:</label>
-            <select id="userRole" onchange="cambiarRol()" style="border:none; background:transparent; font-weight:bold; cursor:pointer;">
-                <option value="admin">Administrador</option>
-                <option value="usuario">Usuario Estándar</option>
+        <div class="role-selector" id="roleSelectorContainer">
+            <label for="userRole">Acceso:</label>
+            <select id="userRole" onchange="cambiarRolSistema()" style="border:none; background:transparent; font-weight:bold; cursor:pointer;">
+                <option value="admin">Administrador (Gestión total)</option>
+                <option value="usuario">Simular Usuario Estándar</option>
             </select>
         </div>
     </header>
+
+    <!-- Selector de Identidad para simular el usuario estándar -->
+    <div id="simulacionUsuarioBar" style="background: var(--pastel-purple); padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: none; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+        <span style="font-weight:600; color:#6b21a8; font-size:0.9em;">👤 Estás visualizando como el usuario:</span>
+        <select id="selectUsuarioSimulado" onchange="actualizarUsuarioActivo()" style="padding: 6px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight:600;"></select>
+    </div>
 
     <!-- Controles y Filtros -->
     <div class="controls">
@@ -119,9 +128,9 @@
         <div style="display: flex; gap: 10px; width: 100%;">
             <select id="filterEstado" onchange="renderizarApp()" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background:white;">
                 <option value="todos">Todos los Estados</option>
-                <option value="Pendiente">Iniciado / Pendiente</option>
+                <option value="Pendiente">Pendientes</option>
                 <option value="En curso">En Curso</option>
-                <option value="Finalizado">Finalizado</option>
+                <option value="Finalizado">Finalizados</option>
             </select>
             <input type="text" id="searchBox" class="search-box" placeholder="🔍 Buscar actividades..." oninput="renderizarApp()" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background:white;">
         </div>
@@ -148,6 +157,13 @@
             <div class="form-group">
                 <label>Duración (Días)</label>
                 <input type="number" id="viajeDuracion" min="1" value="1" required>
+            </div>
+            <div class="form-group">
+                <label>Usuarios Participantes Asignados</label>
+                <div id="viajeParticipantesCheckboxes" class="checkbox-group">
+                    <!-- Se rellenará dinámicamente -->
+                </div>
+                <small style="color:var(--text-muted);">Solo los usuarios seleccionados podrán visualizar este viaje.</small>
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn btn-danger" onclick="cerrarModal('modalViaje')">Cancelar</button>
@@ -228,7 +244,7 @@
                 <input type="email" id="usrEmail" required>
             </div>
             <div class="form-group">
-                <label>Rol</label>
+                <label>Rol en la App</label>
                 <select id="usrRol">
                     <option value="usuario">Usuario Estándar</option>
                     <option value="admin">Administrador</option>
@@ -248,7 +264,8 @@
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxw3CtoC5zKzRaCJIQXwND3l0VwqZWzzGszcaiyPfW_izVRwsZUnXMsozUC9T3IDNbEdw/exec";
 
     let DB = { viajes: [], usuarios: [], actividades: [] };
-    let currentRole = "admin";
+    let modoAcceso = "admin"; // "admin" o "usuario"
+    let usuarioActivoEmail = ""; // Email del usuario estándar seleccionado
     let chartInstances = {};
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -263,6 +280,14 @@
             DB.viajes = data.viajes || [];
             DB.usuarios = data.usuarios || [];
             DB.actividades = data.actividades || [];
+
+            // Inicializar selector de usuarios simulados si hay usuarios
+            if (DB.usuarios.length > 0 && !usuarioActivoEmail) {
+                const primerUsuarioEstandar = DB.usuarios.find(u => u.rol !== 'admin') || DB.usuarios[0];
+                usuarioActivoEmail = primerUsuarioEstandar.email;
+            }
+
+            poblarSelectSimulacion();
             renderizarApp();
         } catch (err) {
             console.error("Error al cargar datos:", err);
@@ -292,8 +317,25 @@
         document.getElementById("sync-banner").style.display = show ? "block" : "none";
     }
 
-    function cambiarRol() {
-        currentRole = document.getElementById("userRole").value;
+    function cambiarRolSistema() {
+        modoAcceso = document.getElementById("userRole").value;
+        renderizarApp();
+    }
+
+    function poblarSelectSimulacion() {
+        const select = document.getElementById("selectUsuarioSimulado");
+        select.innerHTML = "";
+        DB.usuarios.forEach(u => {
+            const opt = document.createElement("option");
+            opt.value = u.email;
+            opt.textContent = `${u.nombre} (${u.email}) - [${u.rol}]`;
+            if (u.email === usuarioActivoEmail) opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
+
+    function actualizarUsuarioActivo() {
+        usuarioActivoEmail = document.getElementById("selectUsuarioSimulado").value;
         renderizarApp();
     }
 
@@ -310,21 +352,41 @@
     }
 
     function renderizarApp() {
-        document.querySelectorAll(".admin-only").forEach(el => {
-            el.style.display = (currentRole === "admin") ? "inline-block" : "none";
-        });
+        const simulacionBar = document.getElementById("simulacionUsuarioBar");
+        
+        if (modoAcceso === "admin") {
+            document.querySelectorAll(".admin-only").forEach(el => el.style.display = "inline-block");
+            simulacionBar.style.display = "none";
+        } else {
+            // Modo usuario estándar: Ocultar botones de administración global
+            document.querySelectorAll(".admin-only").forEach(el => el.style.display = "none");
+            simulacionBar.style.display = "flex";
+        }
 
         const filterEstado = document.getElementById("filterEstado").value;
         const searchBox = document.getElementById("searchBox").value.toLowerCase();
         const container = document.getElementById("listaViajes");
         container.innerHTML = "";
 
-        if (DB.viajes.length === 0) {
-            container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No hay viajes registrados.</p>";
+        // FILTRADO DE VIAJES POR PERMISOS DE USUARIO
+        let viajesVisibles = DB.viajes;
+        if (modoAcceso === "usuario") {
+            viajesVisibles = DB.viajes.filter(v => {
+                // Si el viaje tiene participantes definidos, comprobamos si el usuario activo está incluido
+                if (v.participantes) {
+                    const emailsParticipantes = v.participantes.split(",").map(e => e.trim());
+                    return emailsParticipantes.includes(usuarioActivoEmail);
+                }
+                return false; // Si no tiene participantes asignados, por seguridad el estándar no lo ve
+            });
+        }
+
+        if (viajesVisibles.length === 0) {
+            container.innerHTML = `<p style='text-align:center; color:var(--text-muted); padding:20px;'>No hay viajes disponibles o asignados para este perfil.</p>`;
             return;
         }
 
-        DB.viajes.forEach(v => {
+        viajesVisibles.forEach(v => {
             const estadoAuto = calcularEstado(v.fechaInicio, v.duracionDias);
             if (filterEstado !== "todos" && estadoAuto !== filterEstado) return;
 
@@ -339,8 +401,11 @@
 
             actividadesViaje.sort((a,b) => new Date(a.fecha) - new Date(b.fecha));
 
+            // Calcular número de participantes reales en este viaje
+            const listParticipantesViaje = v.participantes ? v.participantes.split(",").map(e => e.trim()) : [];
+            const numPersonas = listParticipantesViaje.length > 0 ? listParticipantesViaje.length : (DB.usuarios.length || 1);
+            
             const gastoTotal = actividadesViaje.reduce((acc, curr) => acc + (parseFloat(curr.coste) || 0), 0);
-            const numPersonas = DB.usuarios.length || 1;
             const cuotaPerCapita = (gastoTotal / numPersonas).toFixed(2);
 
             const card = document.createElement("div");
@@ -356,11 +421,11 @@
                             <span class="badge ${badgeClass}">${estadoAuto}</span>
                         </div>
                         <div style="font-size:0.85em; color:var(--text-muted); margin-top:4px;">
-                            📅 ${v.fechaInicio ? v.fechaInicio.slice(0,10) : 'N/A'} | ⏳ ${v.duracionDias}d
+                            📅 ${v.fechaInicio ? v.fechaInicio.slice(0,10) : 'N/A'} | ⏳ ${v.duracionDias}d | 👥 Participantes: ${listParticipantesViaje.length}
                         </div>
                     </div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        ${currentRole === 'admin' ? `
+                        ${modoAcceso === 'admin' ? `
                             <button class="btn btn-secondary" style="padding:6px 12px; font-size:0.85em;" onclick="event.stopPropagation(); abrirModalViaje('${v.id}')">✏️ Editar</button>
                             <button class="btn btn-danger" style="padding:6px 12px; font-size:0.85em;" onclick="event.stopPropagation(); anularViaje('${v.id}')">❌ Anular</button>
                         ` : ''}
@@ -448,6 +513,12 @@
     function abrirModalViaje(viajeId = null) {
         document.getElementById("formViaje").reset();
         document.getElementById("viajeId").value = "";
+        
+        // Generar checkboxes de usuarios participantes
+        const containerCheckboxes = document.getElementById("viajeParticipantesCheckboxes");
+        containerCheckboxes.innerHTML = "";
+        
+        let emailsAsociadosActuales = [];
         if (viajeId) {
             const v = DB.viajes.find(item => String(item.id) === String(viajeId));
             if (v) {
@@ -455,19 +526,37 @@
                 document.getElementById("viajeTitulo").value = v.titulo;
                 document.getElementById("viajeFecha").value = v.fechaInicio ? v.fechaInicio.slice(0,10) : "";
                 document.getElementById("viajeDuracion").value = v.duracionDias;
+                if (v.participantes) {
+                    emailsAsociadosActuales = v.participantes.split(",").map(e => e.trim());
+                }
             }
         }
+
+        DB.usuarios.forEach(u => {
+            const isChecked = emailsAsociadosActuales.includes(u.email) ? "checked" : "";
+            const div = document.createElement("label");
+            div.className = "checkbox-item";
+            div.innerHTML = `<input type="checkbox" name="participanteCheckbox" value="${u.email}" ${isChecked}> <span>${u.nombre} (${u.email})</span>`;
+            containerCheckboxes.appendChild(div);
+        });
+
         document.getElementById("modalViaje").classList.add("active");
     }
 
     async function guardarViaje(e) {
         e.preventDefault();
+        
+        // Recoger checkboxes marcados
+        const checkboxes = document.querySelectorAll('input[name="participanteCheckbox"]:checked');
+        const emailsSeleccionados = Array.from(checkboxes).map(cb => cb.value);
+
         const id = document.getElementById("viajeId").value || "VIA-" + Date.now();
         const nuevo = {
             id: id,
             titulo: document.getElementById("viajeTitulo").value,
             fechaInicio: document.getElementById("viajeFecha").value,
             duracionDias: document.getElementById("viajeDuracion").value,
+            participantes: emailsSeleccionados.join(", "), // Guardado como cadena separada por comas en Google Sheets
             estado: "Pendiente",
             creador: "admin@app.com"
         };
@@ -534,7 +623,7 @@
             mapaUrl: document.getElementById("actMapaUrl").value,
             anotaciones: document.getElementById("actAnotaciones").value,
             adjunto: "",
-            usuario: "usuario@app.com"
+            usuario: modoAcceso === "admin" ? "admin@app.com" : usuarioActivoEmail
         };
 
         const idx = DB.actividades.findIndex(a => String(a.id) === String(actId));
@@ -568,6 +657,7 @@
             rol: document.getElementById("usrRol").value
         };
         DB.usuarios.push(nuevo);
+        poblarSelectSimulacion();
         cerrarModal("modalUsuario");
         alert("Usuario registrado correctamente.");
         await sincronizarTabla("saveUsuarios", DB.usuarios);
