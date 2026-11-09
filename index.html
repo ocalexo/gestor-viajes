@@ -7,8 +7,8 @@
     <!-- Chart.js para el gráfico de barras -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            /* Paleta Sepia Suave manteniendo legibilidad y alto contraste */
+    :root {
+            /* Paleta Sepia Suave */
             --bg-main: #fbf8f3;
             --card-bg: #ffffff;
             --primary: #8c6d53;
@@ -24,7 +24,16 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); padding: 10px; line-height: 1.5; }
+        
+        /* Forzamos el color sepia suave en el fondo de toda la ventana */
+        html, body { 
+            background-color: var(--bg-main) !important; 
+            color: var(--text-main); 
+            padding: 10px; 
+            line-height: 1.5; 
+            min-height: 100vh;
+        }
+        
         .container { max-width: 1200px; margin: 0 auto; width: 100%; }
 
         /* Header y Selector de Rol adaptativo */
